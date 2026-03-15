@@ -2,7 +2,8 @@
   <div class="container">
 
     <header class="top-bar">
-      <div class="logo-section">
+      <button class="back-btn" @click="goHome">&#8592;</button>
+      <div class="logo-section" @click="goHome">
         <span class="sun-icon">☀️</span>
         <div class="logo-text">
           <h1>SunnySideUp</h1>
@@ -42,6 +43,7 @@
         class="nav-item"
         v-for="item in navItems"
         :key="item.name"
+        @click="goTo(item.name)"
       >
         <span class="icon">{{ item.icon }}</span>
         <span class="label">{{ item.name }}</span>
@@ -54,9 +56,20 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import Chart from 'chart.js/auto'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 const route = useRoute()
+const router = useRouter()
+
+function goHome() {
+  router.push({ name: 'LocationInput' })
+}
+
+function goTo(name) {
+  if (name === 'UV Tracker') router.push({ name: 'LocationInput' })
+  else if (name === 'Awareness') router.push({ name: 'Awareness' })
+}
+
 const locationName = ref(route.query.suburb || 'Melbourne, VIC')
 
 const navItems = ref([
@@ -70,20 +83,20 @@ const navItems = ref([
 
 
 const melanomaData = {
-  labels: ['2017', '2018', '2019', '2020', '2021'], 
+  labels: ['2017', '2018', '2019', '2020', '2021'],
   datasets: [{
     label: 'Melanoma Cases',
-    data: [15009, 15151, 15703, 14754, 15034], 
+    data: [15009, 15151, 15703, 14754, 15034],
     backgroundColor: 'rgba(255, 99, 132, 0.5)'
   }]
 }
 
-// City UV level 
+// City UV level
 const cityUVData = {
-  labels: ['Melbourne', 'Sydney', 'Brisbane', 'Perth', 'Adelaide', 'Canberra', 'Darwin'], 
+  labels: ['Melbourne', 'Sydney', 'Brisbane', 'Perth', 'Adelaide', 'Canberra', 'Darwin'],
   datasets: [{
     label: 'Yearly Avg UV',
-    data: [5.9, 1.3, 1.4, 1.6, 1.4, 1.2, 2.1], 
+    data: [5.9, 1.3, 1.4, 1.6, 1.4, 1.2, 2.1],
     backgroundColor: 'rgba(54, 162, 235, 0.5)'
   }]
 }
@@ -97,19 +110,19 @@ onMounted(() => {
     data: melanomaData,
     options: {
       responsive: true,
-      plugins: { title: { display: true, text: 'Melanoma Trend', font: {size: 32 } },
-      scales: { y: { title: { display: true, text: 'Melanoma Cases'} } }
+      plugins: { title: { display: true, text: 'Melanoma Trend', font: { size: 32 } } },
+      scales: { y: { title: { display: true, text: 'Melanoma Cases' } } }
     }
-  }})
+  })
 
   // City UV Level
   const ctx2 = document.getElementById('uvHeatChart').getContext('2d')
   new Chart(ctx2, {
-    type: 'bar', 
+    type: 'bar',
     data: cityUVData,
     options: {
       responsive: true,
-      plugins: { title: { display: true, text: "City's UV Level", font: {size: 32 }  } },
+      plugins: { title: { display: true, text: "City's UV Level", font: { size: 32 } } },
       scales: { y: { title: { display: true, text: 'Yearly Avg UV' } } }
     }
   })
@@ -118,6 +131,55 @@ onMounted(() => {
 </script>
 
 <style>
+.top-bar {
+  background: #ff6b6b;
+  color: white;
+  padding: 10px 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  top: 0;
+  left: 0;
+  position: fixed;
+  box-sizing: border-box;
+  z-index: 10;
+  border-radius: 0 0 15px 15px;
+}
+
+.back-btn {
+  position: absolute;
+  left: 15px;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.sun-icon {
+  font-size: 1.8rem;
+  margin-right: 8px;
+}
+
+.logo-text h1 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.tagline {
+  margin: 0;
+  font-size: 0.8rem;
+}
+
 .container {
   width: 100%;
   min-height: 100vh;
@@ -190,6 +252,7 @@ onMounted(() => {
   align-items: center;
   font-size: 11px;
   color: black;
+  cursor: pointer;
 }
 .icon {
   font-size: 18px;

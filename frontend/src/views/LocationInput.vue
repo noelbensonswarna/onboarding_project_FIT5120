@@ -2,7 +2,7 @@
   <div class="container">
 
     <header class="top-bar">
-      <div class="logo-section">
+      <div class="logo-section" @click="suburb = ''">
         <span class="sun-icon">☀️</span>
         <div class="logo-text">
           <h1>SunnySideUp</h1>
@@ -19,7 +19,7 @@
       <input
         type="text"
         v-model="suburb"
-        placeholder="Enter your suburb"
+        placeholder="Enter your City"
         class="input-field"
       />
 
@@ -27,7 +27,7 @@
     </div>
 
     <div class="bottom-nav">
-      <div class="nav-item" v-for="item in navItems" :key="item.name">
+      <div class="nav-item" v-for="item in navItems" :key="item.name" @click="goTo(item.name)">
         <span class="icon">{{ item.icon }}</span>
         <span class="label">{{ item.name }}</span>
       </div>
@@ -50,6 +50,11 @@ const navItems = [
   { name: 'Reminders', icon: '⏰' },
   { name: 'Clothing', icon: '👕' }
 ]
+
+function goTo(name) {
+  if (name === 'UV Tracker') suburb.value = ''
+  else if (name === 'Awareness') router.push({ name: 'Awareness' })
+}
 
 const goNext = () => {
   if (suburb.value.trim() === '') {
@@ -80,7 +85,6 @@ html, body {
   padding-bottom: 70px;
   margin: 0;
   box-sizing: border-box;
-
 }
 
 
@@ -90,6 +94,7 @@ html, body {
   padding: 10px 15px;
   display: flex;
   align-items: center;
+  justify-content: center;
   width: 100%;
   top: 0;
   left: 0;
@@ -102,6 +107,7 @@ html, body {
 .logo-section {
   display: flex;
   align-items: center;
+  cursor: pointer;
 }
 
 .sun-icon {
@@ -119,7 +125,7 @@ html, body {
   font-size: 0.8rem;
 }
 
-.content {       
+.content {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -155,7 +161,7 @@ html, body {
   border: 1px solid black;
   font-size: 1.1rem;
   margin-bottom: 15px;
-  background-color: #fff; 
+  background-color: #fff;
   box-sizing: border-box;
   color: black;
 }
@@ -169,7 +175,7 @@ html, body {
   border-radius: 10px;
   cursor: pointer;
   color: white;
-  background: linear-gradient(90deg, #ff6b6b, #ff4b4b); 
+  background: linear-gradient(90deg, #ff6b6b, #ff4b4b);
   box-sizing: border-box;
 }
 
@@ -196,6 +202,7 @@ html, body {
   align-items: center;
   font-size: 12px;
   color: black;
+  cursor: pointer;
 }
 
 .icon {
