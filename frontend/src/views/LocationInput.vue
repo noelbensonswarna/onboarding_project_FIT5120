@@ -2,7 +2,7 @@
   <div class="container">
 
     <header class="top-bar">
-      <div class="logo-section">
+      <div class="logo-section" @click="suburb = ''">
         <span class="sun-icon">☀️</span>
         <div class="logo-text">
           <h1>SunnySideUp</h1>
@@ -19,7 +19,7 @@
       <input
         type="text"
         v-model="suburb"
-        placeholder="Enter your suburb"
+        placeholder="Enter your City"
         class="input-field"
       />
 
@@ -27,7 +27,7 @@
     </div>
 
     <div class="bottom-nav">
-      <div class="nav-item" v-for="item in navItems" :key="item.name">
+      <div class="nav-item" v-for="item in navItems" :key="item.name" @click="goTo(item.name)">
         <span class="icon">{{ item.icon }}</span>
         <span class="label">{{ item.name }}</span>
       </div>
@@ -50,6 +50,11 @@ const navItems = [
   { name: 'Reminders', icon: '⏰' },
   { name: 'Clothing', icon: '👕' }
 ]
+
+function goTo(name) {
+  if (name === 'UV Tracker') suburb.value = ''
+  else if (name === 'Awareness') router.push({ name: 'Awareness' })
+}
 
 const goNext = () => {
   if (suburb.value.trim() === '') {
@@ -90,6 +95,7 @@ html, body {
   padding: 10px 15px;
   display: flex;
   align-items: center;
+  justify-content: center;
   width: 100%;
   top: 0;
   left: 0;
@@ -102,6 +108,7 @@ html, body {
 .logo-section {
   display: flex;
   align-items: center;
+  cursor: pointer;
 }
 
 .sun-icon {

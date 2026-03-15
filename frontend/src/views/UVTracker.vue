@@ -3,7 +3,7 @@
 
 
     <header class="top-bar">
-      <div class="logo-section">
+      <div class="logo-section" @click="goHome">
         <span class="sun-icon">☀️</span>
         <div class="logo-text">
           <h1>SunnySideUp</h1>
@@ -19,28 +19,17 @@
 
 
 
-    <div class="uv-card" :style="{ borderColor: uvBorderColor }">
+    <div v-if="loading" class="status-message">Loading UV data...</div>
+    <div v-else-if="error" class="status-message error">{{ error }}</div>
+
+    <div v-else class="uv-card" :style="{ borderColor: uvBorderColor }">
       <div class="uv-circle" :style="{ background: uvColor }">
         <h2>{{ uvIndex }}</h2>
-        <p>UV INDEX</p>
+        <p>MAXIMUM UV INDEX</p>
       </div>
 
       <h3>{{ uvLevel }}</h3>
-      <p class="desc">{{ alertMessage }}</p>
-    </div>
-
-    <!-- info -->
-    <div class="info">
-      <div class="box">
-        <p>Peak UV Today</p>
-        <h2>{{ peakUV }}</h2>
-        <p>{{ peakTime }}</p>
-      </div>
-
-      <div class="box">
-        <p>Your Skin Type</p>
-        <h2>{{ skinType }}</h2>
-      </div>
+      <p class="desc">{{ safetyAdvice }}</p>
     </div>
 
 
@@ -60,54 +49,48 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 const route = useRoute()
 const router = useRouter()
 
-
-const locationName = ref(route.query.suburb || 'Melbourne, VIC')
-
-const uvIndex = ref(9)
-const peakUV = ref(11)
-const peakTime = ref('14:00')
-const skinType = ref('Type 5')
-
+const suburb = route.query.suburb || 'Melbourne'
+const locationName = ref(suburb)
+const uvIndex = ref(null)
+const safetyAdvice = ref('')
+const loading = ref(true)
+const error = ref('')
 
 const uvColor = computed(() => {
-  if (uvIndex.value <= 2) return 'linear-gradient(green, lightgreen)'
-  if (uvIndex.value <= 5) return 'linear-gradient(yellow, orange)'
-  if (uvIndex.value <= 7) return 'linear-gradient(orange, red)'
-  if (uvIndex.value <= 10) return 'linear-gradient(red, darkred)'
+  const v = uvIndex.value
+  if (v === null) return '#ccc'
+  if (v <= 2) return 'linear-gradient(green, lightgreen)'
+  if (v <= 5) return 'linear-gradient(yellow, orange)'
+  if (v <= 7) return 'linear-gradient(orange, red)'
+  if (v <= 10) return 'linear-gradient(red, darkred)'
   return 'linear-gradient(purple, magenta)'
 })
 
-
 const uvBorderColor = computed(() => {
-  if (uvIndex.value <= 2) return 'green'
-  if (uvIndex.value <= 5) return 'yellow'
-  if (uvIndex.value <= 7) return 'orange'
-  if (uvIndex.value <= 10) return 'red'
+  const v = uvIndex.value
+  if (v === null) return '#ccc'
+  if (v <= 2) return 'green'
+  if (v <= 5) return 'yellow'
+  if (v <= 7) return 'orange'
+  if (v <= 10) return 'red'
   return 'purple'
 })
 
-
 const uvLevel = computed(() => {
-  if (uvIndex.value <= 2) return 'Low'
-  if (uvIndex.value <= 5) return 'Moderate'
-  if (uvIndex.value <= 7) return 'High'
-  if (uvIndex.value <= 10) return 'Very High'
+  const v = uvIndex.value
+  if (v === null) return '—'
+  if (v <= 2) return 'Low'
+  if (v <= 5) return 'Moderate'
+  if (v <= 7) return 'High'
+  if (v <= 10) return 'Very High'
   return 'Extreme'
 })
-
-
-const alertMessage = computed(() => {
-  if (uvIndex.value >= 3)
-    return 'Take action! Your skin may be damaged quickly.'
-  return 'Low risk, enjoy the sun safely.'
-})
-
 
 const navItems = ref([
   { name: 'UV Tracker', icon: '☀️' },
@@ -118,15 +101,36 @@ const navItems = ref([
   { name: 'Clothing', icon: '👕' }
 ])
 
+function goHome() {
+  router.push({ name: 'LocationInput' })
+}
 
 function goTo(name) {
-  if (name === 'Awareness') {
-    router.push({ name: 'Awareness', query: { suburb: locationName.value } })
-  } else if (name === 'UV Tracker') {
-    router.push({ name: 'UVTracker', query: { suburb: locationName.value } })
-  }
-
+  if (name === 'UV Tracker') router.push({ name: 'LocationInput' })
+  else if (name === 'Awareness') router.push({ name: 'Awareness' })
 }
+
+onMounted(async () => {
+  try {
+    const res = await fetch('http://localhost:3000/api/uv-index', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ suburb })
+    })
+    const data = await res.json()
+    if (!res.ok) {
+      error.value = data.error || 'Failed to fetch UV data.'
+      return
+    }
+    locationName.value = data.state ? `${data.suburb}, ${data.state}` : data.suburb
+    uvIndex.value = data.uv_index
+    safetyAdvice.value = data.safety_advice
+  } catch (e) {
+    error.value = 'Could not connect to the server. Make sure the backend is running.'
+  } finally {
+    loading.value = false
+  }
+})
 </script>
 
 <style>
@@ -157,6 +161,7 @@ html, body {
   padding: 10px 15px;
   display: flex;
   align-items: center;
+  justify-content: center;
   width: 100%;
   top: 0;
   left: 0;
@@ -169,6 +174,7 @@ html, body {
 .logo-section {
   display: flex;
   align-items: center;
+  cursor: pointer;
 }
 
 .sun-icon {
@@ -202,6 +208,15 @@ html, body {
   font-size: 1.5rem;
 }
 
+.status-message {
+  margin: 40px auto;
+  font-size: 1.1rem;
+  color: #555;
+}
+
+.status-message.error {
+  color: #cc0000;
+}
 
 .uv-card {
   background: white;
