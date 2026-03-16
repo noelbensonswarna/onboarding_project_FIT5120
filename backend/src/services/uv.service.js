@@ -5,7 +5,7 @@ const logger = require('../utils/logger');
 const { UV_LEVELS, AUSTRALIA_TIMEZONES, DEFAULT_TIMEZONE } = require('../utils/constants');
 
 const FORECAST_URL = 'https://api.open-meteo.com/v1/forecast';
-const timeout = parseInt(process.env.API_TIMEOUT, 10) || 5000;
+const timeout = parseInt(process.env.API_TIMEOUT, 10) || 60000;
 
 /**
  * Determine the safety level and advice for a given UV index value.
