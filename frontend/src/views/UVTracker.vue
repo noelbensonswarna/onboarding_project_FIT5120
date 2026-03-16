@@ -21,8 +21,8 @@
 
     <div v-else class="uv-card" :style="{ borderColor: uvBorderColor }">
       <div class="uv-circle" :style="{ background: uvColor }">
-        <h2>{{ uvIndex }}</h2>
-        <p>MAXIMUM UV INDEX</p>
+       <h2 :style="{ fontSize: '2rem', textAlign: 'center', margin: '0' }">{{ uvIndex }}</h2>
+       <p>Max UV Index</p>
       </div>
 
       <h3>{{ uvLevel }}</h3>
