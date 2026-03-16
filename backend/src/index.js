@@ -23,6 +23,7 @@ app.use(
     origin: [
       'http://localhost:5173', // Vue dev server
       'https://sunnsysideupsafety.netlify.app',
+      'https://musical-marshmallow-d3975a.netlify.app',
     ],
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type'],
