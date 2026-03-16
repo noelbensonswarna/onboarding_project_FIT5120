@@ -22,8 +22,7 @@ app.use(
   cors({
     origin: [
       'http://localhost:5173', // Vue dev server
-      // Add your production domain here when deploying, e.g.:
-      // 'https://sunnysideup.example.com',
+      'https://sunnsysideupsafety.netlify.app',
     ],
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type'],

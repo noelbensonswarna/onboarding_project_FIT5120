@@ -109,7 +109,7 @@ function goTo(name) {
 
 onMounted(async () => {
   try {
-    const res = await fetch('http://localhost:3000/api/uv-index', {
+    const res = await fetch('https://onboarding-project-fit5120.onrender.com/api/uv-index', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ suburb })
