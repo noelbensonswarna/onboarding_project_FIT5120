@@ -6,7 +6,7 @@
         <span class="sun-icon">☀️</span>
         <div class="logo-text">
           <h1>SunnySideUp</h1>
-          <p class="tagline">sunsafety, your way</p>
+          <p class="tagline">Sunsafety, your Way</p>
         </div>
       </div>
     </header>
