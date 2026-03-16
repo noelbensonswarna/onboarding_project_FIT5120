@@ -2,7 +2,7 @@
 
 Australian UV Index & Sun Safety web app.
 
-**Live:** https://sunnsysideupsafety.netlify.app
+**Live:** https://onboarding-project-hmwn.onrender.com
 
 ## Stack
 - **Frontend:** Vue 3 + Vite — deployed on Netlify
