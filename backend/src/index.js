@@ -24,7 +24,8 @@ app.use(
       'http://localhost:5173', // Vue dev server
       'https://sunnsysideupsafety.netlify.app',
       'https://musical-marshmallow-d3975a.netlify.app',
-      /^https:\/\/.*\.onrender\.com$/,        // any Render static site
+      'https://onboarding-project-hmwn.onrender.com',
+      /^https:\/\/.*\.onrender\.com$/,
     ],
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type'],
