@@ -11,24 +11,43 @@
       </div>
     </header>
 
-    <p class="location">
-      <span class="location-icon">📍</span>
-      {{ locationName }}
-    </p>
+    <div class="body-content">
 
-    <div v-if="loading" class="status-message">Loading UV data...</div>
-    <div v-else-if="error" class="status-message error">{{ error }}</div>
+      <button class="back-btn" @click="goBack">← Back</button>
 
-    <div v-else class="uv-card" :style="{ borderColor: uvBorderColor }">
-      <div class="uv-circle" :style="{ background: uvColor }">
-       <h2 :style="{ fontSize: '2rem', textAlign: 'center', margin: '0' }">{{ uvIndex }}</h2>
-       <p>Max UV Index</p>
+      <p class="location">
+        <span class="location-icon">📍</span>
+        {{ locationName }}
+      </p>
+
+      <div v-if="loading" class="status-message">Loading UV data...</div>
+      <div v-else-if="error" class="status-message error">{{ error }}</div>
+
+      <div v-else class="uv-card" :style="{ borderColor: uvBorderColor }">
+        <div class="uv-circle" :style="{ background: uvColor }">
+          <h2 :style="{ fontSize: '2rem', textAlign: 'center', margin: '0' }">{{ uvIndex }}</h2>
+          <p>UV Index</p>
+        </div>
+        <h3>{{ uvLevel }}</h3>
+        <p class="desc">{{ safetyAdvice }}</p>
       </div>
 
-      <h3>{{ uvLevel }}</h3>
-      <p class="desc">{{ safetyAdvice }}</p>
-    </div>
+      <div v-if="history.length > 1" class="history-section">
+        <h4>Recent Searches</h4>
+        <div class="history-list">
+          <div
+            v-for="item in history"
+            :key="item.suburb"
+            class="history-item"
+            @click="loadFromHistory(item)"
+          >
+            <span>📍 {{ item.suburb }}, {{ item.state }}</span>
+            <span class="history-uv" :style="{ color: levelColor(item.uv_index) }">UV {{ item.uv_index }}</span>
+          </div>
+        </div>
+      </div>
 
+    </div>
 
     <div class="bottom-nav">
       <div
@@ -58,6 +77,7 @@ const uvIndex = ref(null)
 const safetyAdvice = ref('')
 const loading = ref(true)
 const error = ref('')
+const history = ref([])
 
 const uvColor = computed(() => {
   const v = uvIndex.value
@@ -89,6 +109,14 @@ const uvLevel = computed(() => {
   return 'Extreme'
 })
 
+function levelColor(v) {
+  if (v <= 2) return 'green'
+  if (v <= 5) return 'orange'
+  if (v <= 7) return 'darkorange'
+  if (v <= 10) return 'red'
+  return 'purple'
+}
+
 const navItems = ref([
   { name: 'UV Tracker', icon: '☀️' },
   { name: 'Awareness', icon: '📖' },
@@ -98,7 +126,21 @@ const navItems = ref([
   { name: 'Clothing', icon: '👕' }
 ])
 
+function applyData(data) {
+  locationName.value = data.state ? `${data.suburb}, ${data.state}` : data.suburb
+  uvIndex.value = data.uv_index
+  safetyAdvice.value = data.safety_advice
+}
+
+function loadFromHistory(item) {
+  applyData(item)
+}
+
 function goHome() {
+  router.push({ name: 'LocationInput' })
+}
+
+function goBack() {
   router.push({ name: 'LocationInput' })
 }
 
@@ -107,26 +149,33 @@ function goTo(name) {
   else if (name === 'Awareness') router.push({ name: 'Awareness' })
 }
 
-onMounted(async () => {
-  try {
-    const res = await fetch('https://onboarding-project-fit5120.onrender.com/api/uv-index', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ suburb })
-    })
-    const data = await res.json()
-    if (!res.ok) {
-      error.value = data.error || 'Failed to fetch UV data.'
-      return
-    }
-    locationName.value = data.state ? `${data.suburb}, ${data.state}` : data.suburb
-    uvIndex.value = data.uv_index
-    safetyAdvice.value = data.safety_advice
-  } catch (e) {
-    error.value = 'Could not connect to the server. Make sure the backend is running.'
-  } finally {
+onMounted(() => {
+  // Load history from sessionStorage (no API call)
+  history.value = JSON.parse(sessionStorage.getItem('uv_history') || '[]')
+
+  // Read pre-fetched data from LocationInput (no new API call)
+  const cached = sessionStorage.getItem('uv_current')
+  if (cached) {
+    applyData(JSON.parse(cached))
     loading.value = false
+    return
   }
+
+  // Fallback: fetch if somehow navigated directly
+  fetch('https://onboarding-project-fit5120.onrender.com/api/uv-index', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ suburb })
+  })
+    .then(res => res.json().then(data => ({ ok: res.ok, data })))
+    .then(({ ok, data }) => {
+      if (!ok) { error.value = data.error || 'Failed to fetch UV data.'; return }
+      applyData(data)
+    })
+    .catch(() => {
+      error.value = 'Could not connect to the server. Make sure the backend is running.'
+    })
+    .finally(() => { loading.value = false })
 })
 </script>
 
@@ -140,7 +189,6 @@ html, body {
   overflow-x: hidden;
 }
 
-
 .container {
   width: 100%;
   min-height: 100vh;
@@ -150,7 +198,6 @@ html, body {
   padding-bottom: 70px;
   margin: 0 auto;
 }
-
 
 .top-bar {
   background: #ff6b6b;
@@ -189,6 +236,27 @@ html, body {
   font-size: 0.8rem;
 }
 
+.body-content {
+  position: relative;
+  padding: 10px 20px 20px;
+}
+
+.back-btn {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: none;
+  border: none;
+  color: #ff6b6b;
+  font-size: 1rem;
+  cursor: pointer;
+  font-weight: bold;
+  padding: 4px 8px;
+}
+
+.back-btn:hover {
+  text-decoration: underline;
+}
 
 .location {
   color: #666;
@@ -255,22 +323,45 @@ html, body {
   margin-top: 10px;
 }
 
-/* info */
-.info {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  width: 100%;
+.history-section {
+  margin: 24px auto;
   max-width: 900px;
-  margin: 20px auto;
+  text-align: left;
 }
 
-.box {
-  flex: 1;
+.history-section h4 {
+  color: #555;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.history-item {
   background: white;
   border-radius: 10px;
-  padding: 15px;
+  padding: 10px 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
   color: black;
+  font-size: 0.95rem;
+}
+
+.history-item:hover {
+  background: #f0e0e0;
+}
+
+.history-uv {
+  font-weight: bold;
+  font-size: 0.9rem;
 }
 
 /* bottom nav */

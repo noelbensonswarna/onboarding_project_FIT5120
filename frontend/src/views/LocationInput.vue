@@ -21,9 +21,14 @@
         v-model="suburb"
         placeholder="Enter your City"
         class="input-field"
+        @keyup.enter="goNext"
       />
 
-      <button class="continue-btn" @click="goNext">Continue</button>
+      <p v-if="error" class="error-msg">{{ error }}</p>
+
+      <button class="continue-btn" @click="goNext" :disabled="loading">
+        {{ loading ? 'Loading...' : 'Continue' }}
+      </button>
     </div>
 
     <div class="bottom-nav">
@@ -41,6 +46,8 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const suburb = ref('')
+const error = ref('')
+const loading = ref(false)
 
 const navItems = [
   { name: 'UV Tracker', icon: '☀️' },
@@ -52,16 +59,60 @@ const navItems = [
 ]
 
 function goTo(name) {
-  if (name === 'UV Tracker') suburb.value = ''
+  if (name === 'UV Tracker') { suburb.value = ''; error.value = '' }
   else if (name === 'Awareness') router.push({ name: 'Awareness' })
 }
 
-const goNext = () => {
-  if (suburb.value.trim() === '') {
-    alert('Please enter your suburb!')
+async function goNext() {
+  const query = suburb.value.trim()
+  if (!query) {
+    error.value = 'Please enter a city.'
     return
   }
-  router.push({ path: '/uv-tracker', query: { suburb: suburb.value } })
+
+  error.value = ''
+  const cacheKey = 'uv_' + query.toLowerCase()
+
+  // Use sessionStorage cache to avoid repeat API calls
+  const cached = sessionStorage.getItem(cacheKey)
+  if (cached) {
+    sessionStorage.setItem('uv_current', cached)
+    router.push({ path: '/uv-tracker', query: { suburb: query } })
+    return
+  }
+
+  loading.value = true
+  try {
+    const res = await fetch('https://onboarding-project-fit5120.onrender.com/api/uv-index', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ suburb: query })
+    })
+    const data = await res.json()
+
+    if (!res.ok) {
+      error.value = data.error || 'City not found. Please check the spelling and try again.'
+      return
+    }
+
+    // Save to cache
+    sessionStorage.setItem(cacheKey, JSON.stringify(data))
+    sessionStorage.setItem('uv_current', JSON.stringify(data))
+
+    // Save to history (max 5 entries)
+    const history = JSON.parse(sessionStorage.getItem('uv_history') || '[]')
+    const idx = history.findIndex(h => h.suburb.toLowerCase() === query.toLowerCase())
+    if (idx >= 0) history.splice(idx, 1)
+    history.unshift(data)
+    if (history.length > 5) history.pop()
+    sessionStorage.setItem('uv_history', JSON.stringify(history))
+
+    router.push({ path: '/uv-tracker', query: { suburb: query } })
+  } catch (e) {
+    error.value = 'Could not connect to the server. Please try again.'
+  } finally {
+    loading.value = false
+  }
 }
 </script>
 
@@ -160,10 +211,19 @@ html, body {
   border-radius: 10px;
   border: 1px solid black;
   font-size: 1.1rem;
-  margin-bottom: 15px;
+  margin-bottom: 8px;
   background-color: #fff;
   box-sizing: border-box;
   color: black;
+}
+
+.error-msg {
+  color: #cc0000;
+  font-size: 0.95rem;
+  margin: 0 0 10px;
+  width: 90%;
+  max-width: 400px;
+  text-align: left;
 }
 
 .continue-btn {
@@ -179,7 +239,12 @@ html, body {
   box-sizing: border-box;
 }
 
-.continue-btn:hover {
+.continue-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.continue-btn:hover:not(:disabled) {
   opacity: 0.9;
 }
 
