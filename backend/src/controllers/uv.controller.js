@@ -30,7 +30,7 @@ async function getUVIndex(req, res, next) {
     const { name, state, latitude, longitude } = await geocodeSuburb(suburb);
 
     // Fetch UV forecast.
-    const { uvIndex, safetyLevel, safetyAdvice } = await fetchUVIndex(latitude, longitude, state);
+    const { uvIndex, safetyLevel, safetyAdvice } = await fetchUVIndex(latitude, longitude);
 
     const payload = {
       suburb: name,
