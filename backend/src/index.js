@@ -9,6 +9,10 @@ const rateLimiter = require('./middleware/rateLimiter');
 const errorHandler = require('./middleware/errorHandler');
 const uvRoutes = require('./routes/uv.routes');
 const logger = require('./utils/logger');
+<<<<<<< HEAD
+=======
+const { testConnection } = require('./utils/db');
+>>>>>>> db
 
 const app = express();
 const PORT = parseInt(process.env.PORT, 10) || 3000;
@@ -53,11 +57,24 @@ app.use((_req, res) => {
 app.use(errorHandler);
 
 // ─── Start server ─────────────────────────────────────────────────────────────
+<<<<<<< HEAD
 app.listen(PORT, () => {
   logger.info(`Sunny Side Up backend running`, {
     port: PORT,
     env: process.env.NODE_ENV || 'development',
   });
+=======
+testConnection().then(() => {
+  app.listen(PORT, () => {
+    logger.info('Sunny Side Up backend running', {
+      port: PORT,
+      env: process.env.NODE_ENV || 'development',
+    });
+  });
+}).catch(() => {
+  logger.error('Shutting down — could not connect to database');
+  process.exit(1);
+>>>>>>> db
 });
 
 module.exports = app;

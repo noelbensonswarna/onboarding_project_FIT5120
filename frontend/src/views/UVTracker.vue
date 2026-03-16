@@ -1,6 +1,10 @@
 <template>
   <div class="container">
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> db
     <header class="top-bar">
       <div class="logo-section" @click="goHome">
         <span class="sun-icon">☀️</span>
@@ -16,6 +20,11 @@
       {{ locationName }}
     </p>
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> db
     <div v-if="loading" class="status-message">Loading UV data...</div>
     <div v-else-if="error" class="status-message error">{{ error }}</div>
 
@@ -146,8 +155,13 @@ html, body {
   min-height: 100vh;
   background: #f7ecec;
   text-align: center;
+<<<<<<< HEAD
   padding-top: 70px;
   padding-bottom: 70px;
+=======
+  padding-top: 70px;   
+  padding-bottom: 70px; 
+>>>>>>> db
   margin: 0 auto;
 }
 
@@ -258,7 +272,11 @@ html, body {
 /* info */
 .info {
   display: flex;
+<<<<<<< HEAD
   flex-wrap: wrap;
+=======
+  flex-wrap: wrap; 
+>>>>>>> db
   gap: 15px;
   width: 100%;
   max-width: 900px;
@@ -303,4 +321,8 @@ html, body {
   font-size: 11px;
   color: black;
 }
+<<<<<<< HEAD
 </style>
+=======
+</style>
+>>>>>>> db

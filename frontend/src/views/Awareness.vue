@@ -2,7 +2,11 @@
   <div class="container">
 
     <header class="top-bar">
+<<<<<<< HEAD
       <button class="back-btn" @click="goHome">&#8592;</button>
+=======
+
+>>>>>>> db
       <div class="logo-section" @click="goHome">
         <span class="sun-icon">☀️</span>
         <div class="logo-text">
@@ -69,7 +73,10 @@ function goTo(name) {
   if (name === 'UV Tracker') router.push({ name: 'LocationInput' })
   else if (name === 'Awareness') router.push({ name: 'Awareness' })
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> db
 const locationName = ref(route.query.suburb || 'Melbourne, VIC')
 
 const navItems = ref([
@@ -83,20 +90,36 @@ const navItems = ref([
 
 
 const melanomaData = {
+<<<<<<< HEAD
   labels: ['2017', '2018', '2019', '2020', '2021'],
   datasets: [{
     label: 'Melanoma Cases',
     data: [15009, 15151, 15703, 14754, 15034],
+=======
+  labels: ['2017', '2018', '2019', '2020', '2021'], 
+  datasets: [{
+    label: 'Melanoma Cases',
+    data: [15009, 15151, 15703, 14754, 15034], 
+>>>>>>> db
     backgroundColor: 'rgba(255, 99, 132, 0.5)'
   }]
 }
 
+<<<<<<< HEAD
 // City UV level
 const cityUVData = {
   labels: ['Melbourne', 'Sydney', 'Brisbane', 'Perth', 'Adelaide', 'Canberra', 'Darwin'],
   datasets: [{
     label: 'Yearly Avg UV',
     data: [5.9, 1.3, 1.4, 1.6, 1.4, 1.2, 2.1],
+=======
+// City UV level 
+const cityUVData = {
+  labels: ['Melbourne', 'Sydney', 'Brisbane', 'Perth', 'Adelaide', 'Canberra', 'Darwin'], 
+  datasets: [{
+    label: 'Yearly Avg UV',
+    data: [5.9, 1.3, 1.4, 1.6, 1.4, 1.2, 2.1], 
+>>>>>>> db
     backgroundColor: 'rgba(54, 162, 235, 0.5)'
   }]
 }
@@ -118,11 +141,19 @@ onMounted(() => {
   // City UV Level
   const ctx2 = document.getElementById('uvHeatChart').getContext('2d')
   new Chart(ctx2, {
+<<<<<<< HEAD
     type: 'bar',
     data: cityUVData,
     options: {
       responsive: true,
       plugins: { title: { display: true, text: "City's UV Level", font: { size: 32 } } },
+=======
+    type: 'bar', 
+    data: cityUVData,
+    options: {
+      responsive: true,
+      plugins: { title: { display: true, text: "City's UV Level", font: {size: 32 }  } },
+>>>>>>> db
       scales: { y: { title: { display: true, text: 'Yearly Avg UV' } } }
     }
   })
@@ -260,4 +291,8 @@ onMounted(() => {
 .label {
   font-size: 11px;
 }
+<<<<<<< HEAD
 </style>
+=======
+</style>
+>>>>>>> db

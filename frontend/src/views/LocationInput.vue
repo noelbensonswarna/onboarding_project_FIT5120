@@ -6,7 +6,11 @@
         <span class="sun-icon">☀️</span>
         <div class="logo-text">
           <h1>SunnySideUp</h1>
+<<<<<<< HEAD
           <p class="tagline">sunsafety, your way</p>
+=======
+          <p class="tagline">Sunsafety, your Way</p>
+>>>>>>> db
         </div>
       </div>
     </header>
@@ -85,6 +89,10 @@ html, body {
   padding-bottom: 70px;
   margin: 0;
   box-sizing: border-box;
+<<<<<<< HEAD
+=======
+
+>>>>>>> db
 }
 
 
@@ -125,7 +133,11 @@ html, body {
   font-size: 0.8rem;
 }
 
+<<<<<<< HEAD
 .content {
+=======
+.content {       
+>>>>>>> db
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -161,7 +173,11 @@ html, body {
   border: 1px solid black;
   font-size: 1.1rem;
   margin-bottom: 15px;
+<<<<<<< HEAD
   background-color: #fff;
+=======
+  background-color: #fff; 
+>>>>>>> db
   box-sizing: border-box;
   color: black;
 }
@@ -175,7 +191,11 @@ html, body {
   border-radius: 10px;
   cursor: pointer;
   color: white;
+<<<<<<< HEAD
   background: linear-gradient(90deg, #ff6b6b, #ff4b4b);
+=======
+  background: linear-gradient(90deg, #ff6b6b, #ff4b4b); 
+>>>>>>> db
   box-sizing: border-box;
 }
 
@@ -202,7 +222,10 @@ html, body {
   align-items: center;
   font-size: 12px;
   color: black;
+<<<<<<< HEAD
   cursor: pointer;
+=======
+>>>>>>> db
 }
 
 .icon {
@@ -213,4 +236,8 @@ html, body {
   font-size: 12px;
   color: black;
 }
+<<<<<<< HEAD
 </style>
+=======
+</style>
+>>>>>>> db
