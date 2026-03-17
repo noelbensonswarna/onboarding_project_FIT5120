@@ -96,7 +96,7 @@ const cityUVData = {
   labels: ['Melbourne', 'Sydney', 'Brisbane', 'Perth', 'Adelaide', 'Canberra', 'Darwin'],
   datasets: [{
     label: 'Yearly Avg UV',
-    data: [5.9, 1.3, 1.4, 1.6, 1.4, 1.2, 2.1],
+    data: [6.0, 6.7, 8.3, 7.4, 6.6, 6.7, 11.4],
     backgroundColor: 'rgba(54, 162, 235, 0.5)'
   }]
 }
