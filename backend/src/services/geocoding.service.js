@@ -28,7 +28,7 @@ async function geocodeSuburb(suburb) {
 
   if (rows.length === 0) {
     logger.info('Suburb not found in database', { suburb });
-    const notFound = new Error(`Suburb "${suburb}" not found. Please check the spelling and try again.`);
+    const notFound = new Error("Please enter a valid City!");
     notFound.statusCode = 400;
     throw notFound;
   }
