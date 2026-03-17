@@ -290,7 +290,7 @@ html, body {
   border-radius: 20px;
   padding: 30px 10px;
   width: 100%;
-  max-width: 900px;
+  max-width: 400px;
   margin: auto;
   border: 5px solid;
   color: black;
