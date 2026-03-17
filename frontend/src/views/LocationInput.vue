@@ -362,7 +362,7 @@ html, body {
   background: white;
   border-radius: 20px;
   padding: 30px 10px;
-  width: 100%;
+  width: 90%;
   max-width: 400px;
   margin: auto;
   border: 5px solid;
