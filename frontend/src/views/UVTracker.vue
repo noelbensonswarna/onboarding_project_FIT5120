@@ -13,7 +13,7 @@
 
     <div class="body-content">
 
-      <button class="back-btn" @click="goBack">← Try a differnet Location</button>
+      <button class="back-btn" @click="goBack">← Change Location</button>
 
       <p class="location">
         <span class="location-icon">📍</span>

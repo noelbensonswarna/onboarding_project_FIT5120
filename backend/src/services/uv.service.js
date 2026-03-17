@@ -5,7 +5,7 @@ const logger = require('../utils/logger');
 const { UV_LEVELS } = require('../utils/constants');
 
 const UV_URL = 'https://currentuvindex.com/api/v1/uvi';
-const timeout = parseInt(process.env.API_TIMEOUT, 10) || 60000;
+const timeout = parseInt(process.env.API_TIMEOUT, 10) || 5000;
 
 /**
  * Determine the safety level and advice for a given UV index value.
