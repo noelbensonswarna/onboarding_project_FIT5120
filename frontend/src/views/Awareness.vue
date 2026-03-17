@@ -2,7 +2,7 @@
   <div class="container">
 
     <header class="top-bar">
-      <button class="back-btn" @click="goHome">&#8592;</button>
+
       <div class="logo-section" @click="goHome">
         <span class="sun-icon">☀️</span>
         <div class="logo-text">

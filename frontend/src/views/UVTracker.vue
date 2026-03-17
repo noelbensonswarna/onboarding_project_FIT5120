@@ -13,7 +13,7 @@
 
     <div class="body-content">
 
-      <button class="back-btn" @click="goBack">← Back</button>
+      <button class="back-btn" @click="goBack">← Try a differnet Location</button>
 
       <p class="location">
         <span class="location-icon">📍</span>
@@ -247,7 +247,9 @@ html, body {
   left: 10px;
   background: none;
   border: none;
-  color: #ff6b6b;
+  /* color: #ff6b6b;
+   */
+   color: #ec0000;
   font-size: 1rem;
   cursor: pointer;
   font-weight: bold;

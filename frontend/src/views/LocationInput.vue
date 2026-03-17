@@ -91,7 +91,7 @@ async function goNext() {
     const data = await res.json()
 
     if (!res.ok) {
-      error.value = data.error || 'City not found. Please check the spelling and try again.'
+      error.value = data.error || 'Please enter a valid city.'
       return
     }
 
