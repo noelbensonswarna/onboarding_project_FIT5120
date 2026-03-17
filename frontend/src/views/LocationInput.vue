@@ -12,7 +12,7 @@
     </header>
 
     <!-- INPUT VIEW -->
-    <div v-if="!uvData" class="content">
+    <div class="content">
       <span class="nav-icon">🌎</span>
       <h1 class="question">Where are you?</h1>
       <p class="subtext">We'll get you personalized UV info for your area.</p>
@@ -30,27 +30,10 @@
       <button class="continue-btn" @click="fetchUV" :disabled="loading">
         {{ loading ? 'Loading...' : 'Continue' }}
       </button>
-
-      <div v-if="history.length" class="history-section">
-        <h4>Recent Searches</h4>
-        <div class="history-list">
-          <div
-            v-for="item in history"
-            :key="item.suburb"
-            class="history-item"
-            @click="loadFromHistory(item)"
-          >
-            <span>📍 {{ item.suburb }}, {{ item.state }}</span>
-            <span class="history-uv" :style="{ color: levelColor(item.uv_index) }">UV {{ item.uv_index }}</span>
-          </div>
-        </div>
-      </div>
     </div>
 
-    <!-- UV RESULT VIEW -->
-    <div v-else class="body-content">
-
-      <button class="back-btn" @click="reset">← Change Location</button>
+    <!-- UV RESULT VIEW (shown below once data is available) -->
+    <div v-if="uvData" class="body-content">
 
       <p class="location">
         <span class="location-icon">📍</span>
@@ -276,9 +259,7 @@ html, body {
 .content {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  min-height: calc(100vh - 140px);
   padding: 80px 20px 20px;
 }
 
