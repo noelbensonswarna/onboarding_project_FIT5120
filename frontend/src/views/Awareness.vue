@@ -85,8 +85,8 @@ const navItems = ref([
 const melanomaData = {
   labels: ['2017', '2018', '2019', '2020', '2021'],
   datasets: [{
-    label: 'Melanoma Cases',
-    data: [15009, 15151, 15703, 14754, 15034],
+    label: 'Cancer incidence rate',
+    data: [54.1, 53.5, 54, 49.2, 49.0],
     backgroundColor: 'rgba(255, 99, 132, 0.5)'
   }]
 }
@@ -111,7 +111,7 @@ onMounted(() => {
     options: {
       responsive: true,
       plugins: { title: { display: true, text: 'Melanoma Trend', font: { size: 32 } } },
-      scales: { y: { title: { display: true, text: 'Melanoma Cases' } } }
+      scales: { y: { title: { display: true, text: 'Cancer incidence rate' } } }
     }
   })
 
