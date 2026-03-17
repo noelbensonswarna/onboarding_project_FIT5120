@@ -210,15 +210,16 @@ async function fetchUV() {
 <style>
 html, body {
   width: 100%;
-  min-height: 100%;
+  height: 100%;
   margin: 0;
   padding: 0;
   font-family: Arial, sans-serif;
-  overflow-y: auto;
 }
 
 .container {
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   min-height: 100vh;
   background: #f7ecec;
@@ -361,8 +362,8 @@ html, body {
   background: white;
   border-radius: 20px;
   padding: 30px 10px;
-  width: 90%;
-  max-width: 900px;
+  width: 100%;
+  max-width: 400px;
   margin: auto;
   border: 5px solid;
   color: black;
