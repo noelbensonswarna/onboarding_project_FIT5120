@@ -83,7 +83,7 @@ const router = useRouter()
 const suburb = ref('')
 const error = ref('')
 const loading = ref(false)
-const uvData = ref(null)
+const uvData = ref(JSON.parse(sessionStorage.getItem('uv_current') || 'null'))
 const history = ref(JSON.parse(sessionStorage.getItem('uv_history') || '[]'))
 
 const navItems = [
@@ -144,10 +144,12 @@ function reset() {
   uvData.value = null
   suburb.value = ''
   error.value = ''
+  sessionStorage.removeItem('uv_current')
 }
 
 function loadFromHistory(item) {
   uvData.value = item
+  sessionStorage.setItem('uv_current', JSON.stringify(item))
 }
 
 function goTo(name) {
@@ -166,6 +168,7 @@ async function fetchUV() {
   const cached = sessionStorage.getItem(cacheKey)
   if (cached) {
     uvData.value = JSON.parse(cached)
+    sessionStorage.setItem('uv_current', cached)
     return
   }
 
@@ -185,6 +188,7 @@ async function fetchUV() {
 
     uvData.value = data
     sessionStorage.setItem(cacheKey, JSON.stringify(data))
+    sessionStorage.setItem('uv_current', JSON.stringify(data))
 
     // Update history
     const hist = JSON.parse(sessionStorage.getItem('uv_history') || '[]')
